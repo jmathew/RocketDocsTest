@@ -1,4 +1,4 @@
-import { IPerson } from '../models/Store';
+import { IPerson } from '../models/Models';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
@@ -21,13 +21,20 @@ const Container = styled.div`
 `;
 
 const PersonRow = ({person, onEdit}:{person: IPerson, onEdit?: (person:IPerson) => void}) => (
-    <div>
-        <span><button onClick={() => { if(onEdit) onEdit(person); }}>Edit</button></span>
-        <span>{person.firstName}</span>
-        <span>{person.middleInitial}</span>
-        <span>{person.lastName}</span>
-        <span>{person.age}</span>
-        <span>{person.emailAddress}</span>
-        <span>{person.hairColor}</span>
-    </div>
+    <RowContainer>
+        <div><button onClick={() => { if(onEdit) onEdit(person); }}>Edit</button></div>
+        <div>{person.firstName || '-'}</div>
+        <div>{person.middleInitial || '-'}</div>
+        <div>{person.lastName || '-'}</div>
+        <div>{person.age !== undefined ? person.age : '-'}</div>
+        <div>{person.emailAddress || '-'}</div>
+        <div>{person.hairColor || '-'}</div>
+    </RowContainer>
 )
+
+const RowContainer = styled.div`
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+`;

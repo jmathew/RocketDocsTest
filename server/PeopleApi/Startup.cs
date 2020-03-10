@@ -12,11 +12,24 @@ namespace PeopleApi
 {
     public class Startup
     {
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AppContext>();
+
+            // Normally we would not do this and the server and website would be hosted in the same domain.
+            services.AddCors(options => {
+                options.AddPolicy(
+                    MyAllowSpecificOrigins,
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:8000");
+                    }
+                );
+            });
 
             services.AddMvc(options => {
                 options.EnableEndpointRouting = false;
@@ -31,6 +44,9 @@ namespace PeopleApi
                 app.UseDeveloperExceptionPage();
             }
 
+            // UseCors _must_ be before UseMvc
+            app.UseCors(MyAllowSpecificOrigins);
+            
             app.UseMvc();
         }
     }

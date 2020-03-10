@@ -1,4 +1,4 @@
-import { IPerson } from '../models/Store';
+import { IPerson } from '../models/Models';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
