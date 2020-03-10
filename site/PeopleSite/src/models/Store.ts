@@ -1,8 +1,9 @@
-interface IStore {
+export interface IStore {
     people: Array<IPerson>;
 }
 
-interface IPerson {
+export interface IPerson {
+    id: string;
     firstName: string;
     lastName: string;
     middleInitial: string;
@@ -18,6 +19,9 @@ interface IPerson {
 /**
  * Creates a store with the default values
  */
-const createStore = ():IStore => ({
-    people: [],
+export const createStore = ():IStore => ({
+    people: [
+        ({ id: "adsf", firstName: "jon", lastName: "arbuckle", middleInitial: "p", age: 22, emailAddress: "asdf@asdf.com", hairColor: "#000"} as IPerson),
+        ({ id: "ads2f", firstName: "jon", lastName: "arbuckle", middleInitial: "p", age: 22, emailAddress: "asdf@asdf.com", hairColor: "#000"} as IPerson),
+    ],
 });

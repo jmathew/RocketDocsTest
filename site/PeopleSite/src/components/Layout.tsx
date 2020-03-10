@@ -7,7 +7,6 @@ interface IProps {
 export const Layout = ({children}:IProps) => {
     return (
         <div>
-            HI!
             {children}
         </div>
     )
