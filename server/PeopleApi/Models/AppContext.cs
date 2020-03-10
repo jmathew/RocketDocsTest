@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore;
 namespace PeopleApi {
     public class AppContext: DbContext
     {
+        public AppContext(DbContextOptions<AppContext> options) : base(options) {}
+
         public DbSet<Person> People {get; set;}
 
         // TODO: Abstract connection string into start up.
