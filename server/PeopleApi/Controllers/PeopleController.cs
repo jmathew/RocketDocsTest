@@ -26,9 +26,28 @@ namespace PeopleApi {
         [HttpGet]
         [Route("{id}")]
         public async Task<Person>  GetPerson(Guid id) {
-            // TODO: Middleware to handle thrown errors. This will throw an error.
 
-            var person = _context.People.Single(p => p.Id == id);
+            
+            /*
+            TODO: Move this to MD file
+            Normally there would be a response wrapper around all API responses.
+            public class Response<T>
+            {
+                public Response();
+
+                [Required]
+                public bool Success { get; set; }
+                public string ErrorNamespace { get; set; }
+                public string ErrorCode { get; set; }
+                public string ErrorMessage { get; set; }
+                public string ErrorDetails { get; set; }
+                public T Data { get; set; }
+            }
+            */
+
+            // In cases of missing person, respond with no content (""). Normally
+            // I'd throw an error.
+            var person = _context.People.SingleOrDefault(p => p.Id == id);
 
             return person;
         }
@@ -81,7 +100,7 @@ namespace PeopleApi {
             var person = _context.People.Single(p => p.Id == id);
 
             // When binding the body payload, the JSON parser interprets undefined as null.
-            // We would like undefined to be treated as 'do not update' while retaining the 
+            // Ideally, we would like undefined to be treated as 'do not update' while retaining the 
             // ability to set a value to null explicitly. IIRC that isn't possible currently.
             // This would be the ideal setup:
             // { "Age": 10 } > Age is set to new value
@@ -92,7 +111,7 @@ namespace PeopleApi {
             // { "Age": null } > Age is not touched
             // { /* Age not included in JSON */ } > Treated exactly the same as null.
             // 
-            // It is possible that this has changed with System.Text.Json in Aspnet core 3.
+            // It's possible that this has changed with System.Text.Json in Aspnet core 3.
             // https://docs.microsoft.com/en-us/dotnet/standard/serialization/system-text-json-converters-how-to
 
             if(data.FirstName != null) { person.FirstName = data.FirstName; }
@@ -104,6 +123,16 @@ namespace PeopleApi {
 
             await _context.SaveChangesAsync();
             return person;
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task DeletePerson(Guid id) {
+            var person = _context.People.Single(p => p.Id == id);
+
+            _context.People.Remove(person);
+
+            await _context.SaveChangesAsync();
         }
     }
 }

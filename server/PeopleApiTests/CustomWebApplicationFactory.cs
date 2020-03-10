@@ -28,7 +28,7 @@ namespace PeopleApiTests
                     services.Remove(descriptor);
                 }
 
-                // Add ApplicationDbContext using an in-memory database for testing.
+                // Add AppContext using an in-memory database for testing.
                 services.AddDbContext<PeopleApi.AppContext>(options =>
                 {
                     options.UseInMemoryDatabase("InMemoryDbForTesting");
@@ -38,7 +38,7 @@ namespace PeopleApiTests
                 var sp = services.BuildServiceProvider();
 
                 // Create a scope to obtain a reference to the database
-                // context (ApplicationDbContext).
+                // context (AppContext).
                 using (var scope = sp.CreateScope())
                 {
                     var scopedServices = scope.ServiceProvider;
