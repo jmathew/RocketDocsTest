@@ -8,7 +8,6 @@ interface IProps {
 }
 
 export const PersonList = ({ people, onSelect }: IProps) => {
-    console.log(people);
     return (
         <Container>
             {people.map(p => <PersonRow key={p.id} person={p} onEdit={onSelect}/>)}

@@ -26,7 +26,7 @@ namespace PeopleApi
                     MyAllowSpecificOrigins,
                     builder =>
                     {
-                        builder.WithOrigins("http://localhost:8000");
+                        builder.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod();
                     }
                 );
             });
@@ -46,7 +46,7 @@ namespace PeopleApi
 
             // UseCors _must_ be before UseMvc
             app.UseCors(MyAllowSpecificOrigins);
-            
+
             app.UseMvc();
         }
     }

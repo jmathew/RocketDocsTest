@@ -1,11 +1,7 @@
 import React, { useState, useReducer, useEffect } from 'react';
-import { IPerson } from '../models/Models';
-import { EditPerson } from './EditPerson';
 import { PersonList } from './PersonList';
 import styled from 'styled-components';
-import { IAddPersonAction, IUpdatePersonAction, IDeletePersonAction } from '../actions/actions';
-import { AddPerson } from './AddPerson';
-import {v4 as uuidv4} from 'uuid';
+import { AddOrEditPerson } from './AddOrEditPerson';
 
 interface IInitialFetch {
     done: boolean;
@@ -15,6 +11,7 @@ interface IInitialFetch {
 export const App = () => {
     const [people, setPeople ] = useState([]);
     const initialFetch = useInitialFetch(setPeople);
+    const [addPerson, setAddPerson] = useState(false);
 
     // Handle UIs for initial fetch
     if(!initialFetch.done) {
@@ -24,13 +21,19 @@ export const App = () => {
         return (<div>There was an error fetching the list of users: {initialFetch.error.message}</div>)
     }
 
-    
 
     return (
         <div style={{display: 'relative'}}>
             <FullPage>
+                <button onClick={e => setAddPerson(true)}>Add new person</button>
                 <PersonList people={people} onSelect={() => {}} />
             </FullPage>
+
+            {addPerson && (
+                <FullPage>
+                    <AddOrEditPerson onDone={() => setAddPerson(false)}/>
+                </FullPage>
+            )}
         </div>
     )
 }
@@ -69,12 +72,12 @@ const FullPage = styled.div`
     position: absolute;
     top: 0; right: 0; bottom: 0; left: 0;
     background-color: #fff;
+    padding: 1em 3em;
 `;
 
 const fetchUsersAsync = async () => {
     const response = await fetch(`http://localhost:5000/api/people`);
     if(!response.ok) {
-        console.log(response);
         throw new Error(`Server responded with not OK: '${response.status}' '${response.statusText}'`);
     }
 
