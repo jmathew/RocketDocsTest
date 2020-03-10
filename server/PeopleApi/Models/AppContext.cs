@@ -12,7 +12,11 @@ namespace PeopleApi {
 
         // TODO: Abstract connection string into start up.
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite("Data Source=people.db");
+        {
+            if(options.IsConfigured) { return; }
+
+            options.UseSqlite("Data Source=people.db");
+        }
     }
 
     // TODO: Get information on if any of these are required.

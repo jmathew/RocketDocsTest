@@ -34,6 +34,8 @@ namespace PeopleApi {
         }
 
         public class PostPersonPayload {
+
+            // TODO: Many of these values need validation. IE age should be > 0 and a whole number
             public string FirstName { get; set; }
             public string LastName { get; set; }
             public string MiddleInitial {get; set;}
