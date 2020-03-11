@@ -15,13 +15,14 @@ interface IProps {
 export const PersonList = ({ people, onSelect,onDeleted }: IProps) => {
     return (
         <Container>
-            {people.map(p => <PersonRow key={p.id} person={p} onSelect={onSelect} onDeleted={onDeleted} />)}
+            <tbody>
+                {people.map(p => <PersonRow key={p.id} person={p} onSelect={onSelect} onDeleted={onDeleted} />)}
+            </tbody>
         </Container>
     )
 };
-const Container = styled.div`
-    display: flex;
-    flex-direction: column;
+const Container = styled.table`
+    width: 100%;
 `;
 
 interface IPersonRowProps {
@@ -49,32 +50,32 @@ const PersonRow = ({person, onSelect, onDeleted}:IPersonRowProps) => {
         <RowContainer
             onClick={() => { if(onSelect) onSelect(person); }}
         >
-            <div>{person.firstName || '-'}</div>
-            <div>{person.middleInitial || '-'}</div>
-            <div>{person.lastName || '-'}</div>
-            <div>{person.age !== undefined ? person.age : '-'}</div>
-            <div>{person.emailAddress || '-'}</div>
-            <div>{person.hairColor || '-'}</div>
-            <div>
-                <button onClick={(e) => { 
-                    deletePerson();
+            <td>{person.firstName || '-'}</td>
+            <td>{person.middleInitial || '-'}</td>
+            <td>{person.lastName || '-'}</td>
+            <td>{person.age !== undefined ? person.age : '-'}</td>
+            <td>{person.emailAddress || '-'}</td>
+            <td>{person.hairColor || '-'}</td>
+            <td>
+                <button 
+                    style={{
+                        width: '100%'
+                    }}
+                    onClick={(e) => { 
+                        deletePerson();
 
-                    // Prevent the event from bubbling into the overall parent click handler
-                    e.stopPropagation(); 
-                }}>
+                        // Prevent the event from bubbling into the overall parent click handler
+                        e.stopPropagation(); 
+                    }}
+                >
                     Delete
                 </button>
-            </div>
+            </td>
         </RowContainer>
     );
 }
 
-const RowContainer = styled.div`
-    display:flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-
+const RowContainer = styled.tr`
     cursor: pointer;
 
     &:hover {

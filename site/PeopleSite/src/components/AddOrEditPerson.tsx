@@ -27,6 +27,22 @@ export const AddOrEditPerson = ({ initialPerson, onPersonAdded, onPersonUpdated,
         setPerson(updated);
     }
 
+    const onNumericValueChange = (field: string) => (e) => {
+        const newValue = e.target.value;
+        let parsed;
+        try {
+            parsed = parseInt(newValue);
+        }
+        catch(e){
+            console.log('Invalid input', newValue, e);
+        }
+        const updated = Object.assign({} as IPerson, person, {
+            [field]: parsed,
+        } as IPerson);
+        setPerson(updated);
+    }
+
+
     const [fetch, makeCall] = useAddOrEditPersonApi(person, setPerson, onPersonAdded, onPersonUpdated);
 
     if(!fetch.done) {
@@ -51,7 +67,7 @@ export const AddOrEditPerson = ({ initialPerson, onPersonAdded, onPersonUpdated,
             </Field>
             <Field>
                 <div>Age:</div>
-                <input disabled={!fetch.done} value={person.age} onChange={onValueChange('age')} /> 
+                <input disabled={!fetch.done} value={person.age} onChange={onNumericValueChange('age')} /> 
             </Field>
             <Field>
                 <div>Hair Color: </div>
