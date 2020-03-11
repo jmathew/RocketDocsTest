@@ -63,41 +63,7 @@ export const AddOrEditPerson = ({ initialPerson, onPersonAdded, onPersonUpdated,
     )
 };
 
-const useAddOrEditPersonApi = (person, setPerson, onPersonAdded, onPersonUpdated): [IFetch, () => void] => {
-    const [fetch, setFetch] = useState({ done: true } as IFetch)
 
-    useEffect(() => {
-        if(fetch.done) return;
-
-        const callIt = async () => {
-            try {
-                // If it has id it is an edit and not an add TODO
-                const updated = await addOrEditPersonAsync(person);
-
-                if(!person.id) onPersonAdded(updated);
-                if(person.id) onPersonUpdated(updated);
-
-
-                setPerson(updated);
-                setFetch({done: true })
-            }
-            catch (e) {
-                setFetch({done: true, error: e})
-            }
-        };
-
-        callIt();
-    },
-    [fetch.done]);
-
-    const makeCall = () => setFetch({ done: false })
-    return [fetch, makeCall]
-}
-
-interface IFetch {
-    done: boolean;
-    error?: Error;
-}
 
 const Container = styled.div`
     display: flex;
@@ -108,3 +74,48 @@ const Field = styled.div`
     display: flex;
     flex-direction: column;
 `;
+
+interface IAddOrUpdateOperation {
+    done: boolean;
+    error?: Error;
+}
+
+/**
+ * Convenience method to store all the steps involved in running the delete operation.
+ * @param person Person to add or update
+ * @param onPersonAdded Callback to call when the person is added.
+ * @param onPersonUpdated Callback to call when the person is updated.
+ */
+const useAddOrEditPersonApi = (person, setPerson, onPersonAdded, onPersonUpdated): [IAddOrUpdateOperation, () => void] => {
+    const [operation, setOperation] = useState({ done: true } as IAddOrUpdateOperation)
+
+    useEffect(() => {
+        if(operation.done) return;
+
+        const callIt = async () => {
+            try {
+                // If it has id it is an edit and not an add TODO
+                const updated = await addOrEditPersonAsync(person);
+
+                // Call the appropriate callback
+                if(!person.id) onPersonAdded(updated);
+                if(person.id) onPersonUpdated(updated);
+
+
+                setPerson(updated);
+                setOperation({done: true })
+            }
+            catch (e) {
+                setOperation({done: true, error: e})
+            }
+        };
+
+        callIt();
+    },
+    [operation.done]);
+
+    // Make a more convenient function for the caller.
+    const makeCall = () => setOperation({ done: false })
+
+    return [operation, makeCall]
+}
