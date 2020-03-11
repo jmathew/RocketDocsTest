@@ -20,7 +20,6 @@ export const PersonList = ({ people, onSelect,onDeleted }: IProps) => {
     useEffect(
         () => {
             const sorted = _.sortBy(people, sortBy);
-            console.log(sorted);
             setSortedPeople(sorted);
         },
         [sortBy, people]
@@ -64,7 +63,7 @@ const PersonRow = ({person, onSelect, onDeleted}:IPersonRowProps) => {
     if(deleteOp.deleting) {
         return(
             <RowContainer>
-                <tbody><tr>Deleting...</tr></tbody>
+                <td>Deleting...</td>
             </RowContainer>
         )
     }
