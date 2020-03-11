@@ -21,34 +21,35 @@ namespace PeopleApi {
             return _context.People;
         }
 
-        // TODO: Projections
-
         [HttpGet]
         [Route("{id}")]
         public async Task<Person>  GetPerson(Guid id) {
 
             
             /*
-            TODO: Move this to MD file
-            Normally there would be a response wrapper around all API responses.
-            public class Response<T>
-            {
-                public Response();
+                Normally there would be a response wrapper around all API responses.
+                Something like this:
+                public class Response<T>
+                {
+                    public Response();
 
-                [Required]
-                public bool Success { get; set; }
-                public string ErrorNamespace { get; set; }
-                public string ErrorCode { get; set; }
-                public string ErrorMessage { get; set; }
-                public string ErrorDetails { get; set; }
-                public T Data { get; set; }
-            }
+                    [Required]
+                    public bool Success { get; set; }
+                    public string ErrorNamespace { get; set; }
+                    public string ErrorCode { get; set; }
+                    public string ErrorMessage { get; set; }
+                    public string ErrorDetails { get; set; }
+                    public T Data { get; set; }
+                }
             */
 
             // In cases of missing person, respond with no content (""). Normally
             // I'd throw an error.
             var person = _context.People.SingleOrDefault(p => p.Id == id);
 
+            // Here we're serializing the person object directly. Normally
+            // we'd also want to create a new object to avoid accidentally
+            // leaking data.
             return person;
         }
 
@@ -58,6 +59,7 @@ namespace PeopleApi {
             public string FirstName { get; set; }
             public string LastName { get; set; }
             public string MiddleInitial {get; set;}
+            public string Email {get; set;}
             public int Age {get; set;}
             public string HairColor {get; set;}
         }
@@ -72,6 +74,7 @@ namespace PeopleApi {
                 FirstName = data.FirstName,
                 LastName = data.LastName,
                 MiddleInitial = data.MiddleInitial,
+                Email = data.Email,
                 Age = data.Age,
                 HairColor = data.HairColor,
             };
@@ -88,6 +91,7 @@ namespace PeopleApi {
             public string FirstName { get; set; }
             public string LastName { get; set; }
             public string MiddleInitial {get; set;}
+            public string Email {get; set;}
             public int? Age {get; set;}
             public string HairColor {get; set;}
         }
@@ -117,6 +121,7 @@ namespace PeopleApi {
             if(data.FirstName != null) { person.FirstName = data.FirstName; }
             if(data.LastName != null) { person.LastName = data.LastName; }
             if(data.MiddleInitial != null) { person.MiddleInitial = data.MiddleInitial; }
+            if(data.Email != null) { person.Email = data.Email; }
             if(data.Age.HasValue) { person.Age = data.Age.Value; }
             if(data.HairColor != null) { person.HairColor = data.HairColor; }
 

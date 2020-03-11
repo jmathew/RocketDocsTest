@@ -37,6 +37,7 @@ namespace PeopleApiTests {
             public string firstName { get; set; }
             public string lastName { get; set; }
             public string middleInitial {get; set;}
+            public string email {get; set;}
             public int age {get; set;}
             public string hairColor {get; set;}
         }
@@ -50,6 +51,7 @@ namespace PeopleApiTests {
                 FirstName = "Timothy",
                 LastName = "Buckwheat",
                 MiddleInitial = "P",
+                Email = "someemail@asdf.com",
                 Age = 98,
                 HairColor = "Steel Panther"
             };
@@ -67,6 +69,7 @@ namespace PeopleApiTests {
             json.firstName.ShouldBe(payload.FirstName);
             json.lastName.ShouldBe(payload.LastName);
             json.middleInitial.ShouldBe(payload.MiddleInitial);
+            json.email.ShouldBe(payload.Email);
             json.age.ShouldBe(payload.Age);
             json.hairColor.ShouldBe(payload.HairColor);
         }
@@ -75,7 +78,7 @@ namespace PeopleApiTests {
         public async Task GetPerson() 
         {
             var client = _factory.CreateClient();
-            var person = await CreatePersonAsync(client, "Get", "Person", "T", 22, "Electric blue");
+            var person = await CreatePersonAsync(client, "Get", "Person", "T", "test@email.com", 22, "Electric blue");
             person.id.ShouldNotBeNull();
 
             var response = await client.GetAsync($"/api/people/{person.id}");
@@ -92,7 +95,7 @@ namespace PeopleApiTests {
         public async Task UpdatePerson() 
         {
             var client = _factory.CreateClient();
-            var person = await CreatePersonAsync(client, "Get", "Person", "T", 22, "Electric blue");
+            var person = await CreatePersonAsync(client, "Get", "Person", "T", "test@email.com", 22, "Electric blue");
             person.id.ShouldNotBeNull();
             person.firstName.ShouldBe("Get");
             person.lastName.ShouldBe("Person");
@@ -100,7 +103,7 @@ namespace PeopleApiTests {
             person.age.ShouldBe(22);
             person.hairColor.ShouldBe("Electric blue");
 
-            // Update everything except the age and hair color
+            // Update everything except the age and hair color and email
             var payload = new {
                 FirstName = "Bernard",
                 LastName = "Cooper",
@@ -125,7 +128,7 @@ namespace PeopleApiTests {
         public async Task DeletePerson() 
         {
             var client = _factory.CreateClient();
-            var person = await CreatePersonAsync(client, "Get", "Person", "T", 22, "Electric blue");
+            var person = await CreatePersonAsync(client, "Get", "Person", "T", "test@email.com", 22, "Electric blue");
             person.id.ShouldNotBeNull();
 
             var deleteResponse = await client.DeleteAsync($"/api/people/{person.id}");
@@ -141,10 +144,10 @@ namespace PeopleApiTests {
 
         public async Task ListPeople() {
             var client = _factory.CreateClient();
-            var person1 = await CreatePersonAsync(client, "Abe", "Lincoln", "?", 22, "Sandlewood brown");
+            var person1 = await CreatePersonAsync(client, "Abe", "Lincoln", "?", "test@email.com", 22, "Sandlewood brown");
             person1.id.ShouldNotBeNull();
 
-            var person2 = await CreatePersonAsync(client, "Liz", "Lemon", "?", 22, "Brown");
+            var person2 = await CreatePersonAsync(client, "Liz", "Lemon", "?", "test@email.com", 22, "Brown");
             person2.id.ShouldNotBeNull();
 
             var response = await client.GetAsync("/api/people");
@@ -165,11 +168,12 @@ namespace PeopleApiTests {
             return json;
         }
 
-        private async Task<PersonResponse> CreatePersonAsync(HttpClient client, string first, string last, string initial, int age, string hair) {
+        private async Task<PersonResponse> CreatePersonAsync(HttpClient client, string first, string last, string initial, string email, int age, string hair) {
             var payload = new {
                 FirstName = first,
                 LastName = last,
                 MiddleInitial = initial,
+                Email = email,
                 Age = age,
                 HairColor = hair
             };
