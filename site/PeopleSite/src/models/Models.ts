@@ -1,3 +1,7 @@
+/**
+ * Model for a person.
+ * This must match the server side model exactly.
+ */
 export interface IPerson {
     id: string;
     firstName: string;
@@ -5,7 +9,7 @@ export interface IPerson {
     middleInitial: string;
     age: number;
 
-    emailAddress: string;
+    email: string;
 
     // This will be a # code (though it is not validated on the server)
     hairColor: string;

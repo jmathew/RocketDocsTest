@@ -34,7 +34,7 @@ export const PersonList = ({ people, onSelect,onDeleted }: IProps) => {
                     <td onClick={() => setSortBy('lastName')}>Last Name</td>
                     <td onClick={() => setSortBy('middleInitial')}>Middle Initial</td>
                     <td onClick={() => setSortBy('age')}>Age</td>
-                    <td onClick={() => setSortBy('emailAddress')}>Email</td>
+                    <td onClick={() => setSortBy('email')}>Email</td>
                     <td onClick={() => setSortBy('hairColor')}>Hair color</td>
                 </tr>
             </thead>
@@ -77,7 +77,7 @@ const PersonRow = ({person, onSelect, onDeleted}:IPersonRowProps) => {
             <td>{person.middleInitial || '-'}</td>
             <td>{person.lastName || '-'}</td>
             <td>{person.age !== undefined ? person.age : '-'}</td>
-            <td>{person.emailAddress || '-'}</td>
+            <td>{person.email || '-'}</td>
             <td style={{ backgroundColor: person.hairColor || 'none' }}>{person.hairColor || '-'}</td>
             <td>
                 <button 

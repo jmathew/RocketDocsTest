@@ -24,7 +24,7 @@ export const addOrEditPersonAsync = async (person: IPerson) => {
             FirstName: person.firstName,
             LastName: person.lastName,
             MiddleInitial: person.middleInitial,
-            // TODO: Email
+            Email: person.email,
             Age: person.age,
             HairColor: person.hairColor,
         }),

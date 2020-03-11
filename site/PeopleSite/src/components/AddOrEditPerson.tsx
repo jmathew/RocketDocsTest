@@ -16,7 +16,7 @@ export const AddOrEditPerson = ({ initialPerson, onPersonAdded, onPersonUpdated,
         lastName: '',
         middleInitial: '',
         age: 0,
-        emailAddress: '',
+        email: '',
         hairColor: '',
     } as IPerson);
 
@@ -65,6 +65,10 @@ export const AddOrEditPerson = ({ initialPerson, onPersonAdded, onPersonUpdated,
             <Field>
                 <div>Last Name:</div>
                 <input disabled={!fetch.done} value={person.lastName} onChange={onValueChange('lastName')} /> 
+            </Field>
+            <Field>
+                <div>Email:</div>
+                <input disabled={!fetch.done} value={person.email} onChange={onValueChange('email')} /> 
             </Field>
             <Field>
                 <div>Age:</div>
