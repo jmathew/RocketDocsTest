@@ -1,10 +1,10 @@
 # Getting started
 
 Make sure the following is installed before running:
-* Dotnet core SDK version `3.1.102` or greater
-* Node version `13.8.0` or greater
-* Yarn version `1.22.0` or greater
-* Gatsby CLI version `2.10.4` or greater
+* [Dotnet core SDK](https://dotnet.microsoft.com/download) version `3.1.102` or greater
+* [Node](https://nodejs.org/en/download/current/) version `13.8.0` or greater
+* [Yarn](https://yarnpkg.com/getting-started/install) version `1.22.0` or greater
+* [Gatsby CLI](https://www.gatsbyjs.org/docs/quick-start/) version `2.10.4` or greater
 
 
 First we start up the server side:
