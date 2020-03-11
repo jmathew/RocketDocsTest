@@ -2,6 +2,7 @@ import { IPerson } from '../models/Models';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { deletePersonAsync } from '../api/Api';
+import _ from 'lodash';
 
 interface IProps {
     people: Array<IPerson>;
@@ -13,10 +14,32 @@ interface IProps {
  * Displays a list of people in a sortable table
  */
 export const PersonList = ({ people, onSelect,onDeleted }: IProps) => {
+    const [sortBy, setSortBy] = useState<keyof IPerson>('lastName');
+    const [sortedPeople, setSortedPeople] = useState(_.sortBy(people, sortBy));
+
+    useEffect(
+        () => {
+            const sorted = _.sortBy(people, sortBy);
+            console.log(sorted);
+            setSortedPeople(sorted);
+        },
+        [sortBy, people]
+    );
+
     return (
         <Container>
+            <thead>
+                <tr>
+                    <td onClick={() => setSortBy('firstName')}>First Name</td>
+                    <td onClick={() => setSortBy('lastName')}>Last Name</td>
+                    <td onClick={() => setSortBy('middleInitial')}>Middle Initial</td>
+                    <td onClick={() => setSortBy('age')}>Age</td>
+                    <td onClick={() => setSortBy('emailAddress')}>Email</td>
+                    <td onClick={() => setSortBy('hairColor')}>Hair color</td>
+                </tr>
+            </thead>
             <tbody>
-                {people.map(p => <PersonRow key={p.id} person={p} onSelect={onSelect} onDeleted={onDeleted} />)}
+                {sortedPeople.map(p => <PersonRow key={p.id} person={p} onSelect={onSelect} onDeleted={onDeleted} />)}
             </tbody>
         </Container>
     )
@@ -55,7 +78,7 @@ const PersonRow = ({person, onSelect, onDeleted}:IPersonRowProps) => {
             <td>{person.lastName || '-'}</td>
             <td>{person.age !== undefined ? person.age : '-'}</td>
             <td>{person.emailAddress || '-'}</td>
-            <td>{person.hairColor || '-'}</td>
+            <td style={{ backgroundColor: person.hairColor || 'none' }}>{person.hairColor || '-'}</td>
             <td>
                 <button 
                     style={{
@@ -82,8 +105,6 @@ const RowContainer = styled.tr`
         background-color: #EEE
     }
 `;
-
-
 
 interface IDeleteOperation {
     deleting: boolean;

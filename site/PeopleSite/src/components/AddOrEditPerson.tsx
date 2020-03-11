@@ -36,6 +36,7 @@ export const AddOrEditPerson = ({ initialPerson, onPersonAdded, onPersonUpdated,
         catch(e){
             console.log('Invalid input', newValue, e);
         }
+        if(isNaN(parsed)) parsed = 0;
         const updated = Object.assign({} as IPerson, person, {
             [field]: parsed,
         } as IPerson);

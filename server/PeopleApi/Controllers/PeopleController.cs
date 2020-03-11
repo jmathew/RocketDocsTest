@@ -118,7 +118,7 @@ namespace PeopleApi {
             if(data.LastName != null) { person.LastName = data.LastName; }
             if(data.MiddleInitial != null) { person.MiddleInitial = data.MiddleInitial; }
             if(data.Age.HasValue) { person.Age = data.Age.Value; }
-            if(data.HairColor != null) { person.MiddleInitial = data.MiddleInitial; }
+            if(data.HairColor != null) { person.HairColor = data.HairColor; }
 
 
             await _context.SaveChangesAsync();
