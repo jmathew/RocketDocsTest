@@ -20,8 +20,9 @@ const Container = styled.div`
 `;
 
 const PersonRow = ({person, onEdit}:{person: IPerson, onEdit?: (person:IPerson) => void}) => (
-    <RowContainer>
-        <div><button onClick={() => { if(onEdit) onEdit(person); }}>Edit</button></div>
+    <RowContainer
+        onClick={() => { if(onEdit) onEdit(person); }}
+    >
         <div>{person.firstName || '-'}</div>
         <div>{person.middleInitial || '-'}</div>
         <div>{person.lastName || '-'}</div>
@@ -36,4 +37,10 @@ const RowContainer = styled.div`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+
+    cursor: pointer;
+
+    &:hover {
+        background-color: #EEE
+    }
 `;

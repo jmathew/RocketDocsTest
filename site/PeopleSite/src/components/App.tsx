@@ -2,6 +2,7 @@ import React, { useState, useReducer, useEffect } from 'react';
 import { PersonList } from './PersonList';
 import styled from 'styled-components';
 import { AddOrEditPerson } from './AddOrEditPerson';
+import { IPerson } from '../models/Models';
 
 interface IInitialFetch {
     done: boolean;
@@ -12,8 +13,9 @@ export const App = () => {
     const [people, setPeople ] = useState([]);
     const initialFetch = useInitialFetch(setPeople);
     const [addPerson, setAddPerson] = useState(false);
+    const [editPerson, setEditPerson] = useState();
 
-    // Handle UIs for initial fetch
+    // Handle UIs for initial fetch.
     if(!initialFetch.done) {
         return (<div>Loading list of users...</div>);
     }
@@ -21,17 +23,46 @@ export const App = () => {
         return (<div>There was an error fetching the list of users: {initialFetch.error.message}</div>)
     }
 
+    // These are callbacks for when a person is edited / added in one of our child components
+    const onPersonAdded = (person: IPerson) => {
+        setPeople(people.concat(person));
+    };
+    const onPersonUpdated = (person: IPerson) => {
+        setPeople(people.map(p => p.id === person.id ? person : p));
+    };
+
 
     return (
         <div style={{display: 'relative'}}>
             <FullPage>
                 <button onClick={e => setAddPerson(true)}>Add new person</button>
-                <PersonList people={people} onSelect={() => {}} />
+                <PersonList people={people} onSelect={(p) => {
+                    setEditPerson(p);
+                }}
+                />
             </FullPage>
 
+            {editPerson && (
+                <FullPage>
+                    <AddOrEditPerson 
+                        initialPerson={editPerson}
+                        onPersonAdded={onPersonAdded}
+                        onPersonUpdated={onPersonUpdated}
+                        onDone={() => {
+                            setEditPerson(undefined);
+                        }}
+                    />
+                </FullPage>
+            )}
             {addPerson && (
                 <FullPage>
-                    <AddOrEditPerson onDone={() => setAddPerson(false)}/>
+                    <AddOrEditPerson 
+                        onPersonAdded={onPersonAdded}
+                        onPersonUpdated={onPersonUpdated}
+                        onDone={() => {
+                            setAddPerson(false);
+                        }}
+                    />
                 </FullPage>
             )}
         </div>

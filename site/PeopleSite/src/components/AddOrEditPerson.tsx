@@ -3,11 +3,14 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 interface IProps {
+    onPersonAdded: (added: IPerson) => void;
+    onPersonUpdated: (updated: IPerson) => void;
     onDone: () => void;
+    initialPerson?: IPerson;
 }
 
-export const AddOrEditPerson = ({ onDone}: IProps) => {
-    const [person, setPerson] = useState({
+export const AddOrEditPerson = ({ initialPerson, onPersonAdded, onPersonUpdated, onDone}: IProps) => {
+    const [person, setPerson] = useState(initialPerson || {
         firstName: '',
         lastName: '',
         middleInitial: '',
@@ -23,30 +26,7 @@ export const AddOrEditPerson = ({ onDone}: IProps) => {
         setPerson(updated);
     }
 
-    const [makingCall, setMakingCall] = useState(false);
-    const [fetch, setFetch] = useState({ done: true } as IFetch)
-
-    useEffect(() => {
-        if(!makingCall) return;
-
-        const callIt = async () => {
-            try {
-
-                // If it has id it is an edit and not an add TODO
-                const updated = await addOrEditPersonAsync(person);
-                setPerson(updated);
-                setFetch({done: true })
-                setMakingCall(false);
-            }
-            catch (e) {
-                setFetch({done: true, error: e})
-                setMakingCall(false); // TODO: remove this
-            }
-        };
-
-        callIt();
-    },
-    [makingCall]);
+    const [fetch, makeCall] = useAddOrEditPersonApi(person, setPerson, onPersonAdded, onPersonUpdated);
 
     if(!fetch.done) {
         return (
@@ -58,29 +38,60 @@ export const AddOrEditPerson = ({ onDone}: IProps) => {
         <Container>
             <Field>
                 <div>First Name:</div>
-                <input disabled={makingCall} value={person.firstName} onChange={onValueChange('firstName')} /> 
+                <input disabled={!fetch.done} value={person.firstName} onChange={onValueChange('firstName')} /> 
             </Field>
             <Field>
                 <div>MiddleInitial:</div>
-                <input disabled={makingCall} value={person.middleInitial} onChange={onValueChange('middleInitial')} /> 
+                <input disabled={!fetch.done} value={person.middleInitial} onChange={onValueChange('middleInitial')} /> 
             </Field>
             <Field>
                 <div>Last Name:</div>
-                <input disabled={makingCall} value={person.lastName} onChange={onValueChange('lastName')} /> 
+                <input disabled={!fetch.done} value={person.lastName} onChange={onValueChange('lastName')} /> 
             </Field>
             <Field>
                 <div>Age:</div>
-                <input disabled={makingCall} value={person.age} onChange={onValueChange('age')} /> 
+                <input disabled={!fetch.done} value={person.age} onChange={onValueChange('age')} /> 
             </Field>
             <Field>
                 <div>Hair Color: </div>
-                <input disabled={makingCall} value={person.hairColor} onChange={onValueChange('hairColor')} /> 
+                <input disabled={!fetch.done} value={person.hairColor} onChange={onValueChange('hairColor')} /> 
             </Field>
-            <button disabled={makingCall} onClick={e => setMakingCall(true)}>{person.id ? `Update` : `Add`}</button>
-            <button disabled={makingCall} onClick={e => onDone()}>Return to list</button>
+            <button disabled={!fetch.done} onClick={e => makeCall()}>{person.id ? `Update` : `Add`}</button>
+            <button disabled={!fetch.done} onClick={e => onDone()}>Return to list</button>
         </Container>
     )
 };
+
+const useAddOrEditPersonApi = (person, setPerson, onPersonAdded, onPersonUpdated): [IFetch, () => void] => {
+    const [fetch, setFetch] = useState({ done: true } as IFetch)
+
+    useEffect(() => {
+        if(fetch.done) return;
+
+        const callIt = async () => {
+            try {
+                // If it has id it is an edit and not an add TODO
+                const updated = await addOrEditPersonAsync(person);
+
+                if(!person.id) onPersonAdded(updated);
+                if(person.id) onPersonUpdated(updated);
+
+
+                setPerson(updated);
+                setFetch({done: true })
+            }
+            catch (e) {
+                setFetch({done: true, error: e})
+            }
+        };
+
+        callIt();
+    },
+    [fetch.done]);
+
+    const makeCall = () => setFetch({ done: false })
+    return [fetch, makeCall]
+}
 
 interface IFetch {
     done: boolean;
