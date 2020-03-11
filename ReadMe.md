@@ -33,6 +33,14 @@ Now that everything is setup, you can navigate to `http://localhost:8000` and br
 If it's there are no people all that will be visible is an 'Add new person' button and some 
 sparse table headings.
 
+# Testing
+There are integration tests for the server side.
+
+You can run them like so:
+```
+cd server/PeopleApiTests
+dotnet test
+```
 
 # Caveats
 * There is no validation on most fields. Server side and client side. 
