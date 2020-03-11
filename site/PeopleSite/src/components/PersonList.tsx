@@ -41,7 +41,7 @@ const PersonRow = ({person, onSelect, onDeleted}:IPersonRowProps) => {
     if(deleteOp.deleting) {
         return(
             <RowContainer>
-                Deleting...
+                <tbody><tr>Deleting...</tr></tbody>
             </RowContainer>
         )
     }
