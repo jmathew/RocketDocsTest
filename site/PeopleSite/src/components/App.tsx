@@ -3,6 +3,7 @@ import { PersonList } from './PersonList';
 import styled from 'styled-components';
 import { AddOrEditPerson } from './AddOrEditPerson';
 import { IPerson } from '../models/Models';
+import { fetchUsersAsync } from '../api/Api';
 
 interface IInitialFetch {
     done: boolean;
@@ -30,15 +31,21 @@ export const App = () => {
     const onPersonUpdated = (person: IPerson) => {
         setPeople(people.map(p => p.id === person.id ? person : p));
     };
+    const onPersonDeleted = (person: IPerson) => {
+        setPeople(people.filter(p => p.id !== person.id));
+    }
 
 
     return (
         <div style={{display: 'relative'}}>
             <FullPage>
                 <button onClick={e => setAddPerson(true)}>Add new person</button>
-                <PersonList people={people} onSelect={(p) => {
-                    setEditPerson(p);
-                }}
+                <PersonList 
+                    people={people} 
+                    onSelect={(p) => {
+                        setEditPerson(p);
+                    }}
+                    onDeleted={onPersonDeleted}
                 />
             </FullPage>
 
@@ -105,14 +112,3 @@ const FullPage = styled.div`
     background-color: #fff;
     padding: 1em 3em;
 `;
-
-const fetchUsersAsync = async () => {
-    const response = await fetch(`http://localhost:5000/api/people`);
-    if(!response.ok) {
-        throw new Error(`Server responded with not OK: '${response.status}' '${response.statusText}'`);
-    }
-
-    const json = await response.json();
-
-    return json;
-}

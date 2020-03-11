@@ -1,6 +1,7 @@
 import { IPerson } from '../models/Models';
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { addOrEditPersonAsync } from '../api/Api';
 
 interface IProps {
     onPersonAdded: (added: IPerson) => void;
@@ -107,27 +108,3 @@ const Field = styled.div`
     display: flex;
     flex-direction: column;
 `;
-
-const addOrEditPersonAsync = async (person: IPerson) => {
-    const endpoint = person.id ? `people/${person.id}` : `people`;
-    const method = person.id ? 'PUT' : 'POST';
-
-    const response = await fetch(`http://localhost:5000/api/${endpoint}`, {
-        method: method,
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            FirstName: person.firstName,
-            LastName: person.lastName,
-            MiddleInitial: person.middleInitial,
-            // TODO: Email
-            Age: person.age,
-            HairColor: person.hairColor,
-        }),
-    });
-
-    const json = await response.json();
-
-    return json as IPerson;
-}
