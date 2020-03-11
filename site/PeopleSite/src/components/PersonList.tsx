@@ -5,13 +5,24 @@ import { deletePersonAsync } from '../api/Api';
 import _ from 'lodash';
 
 interface IProps {
+    /**
+     * Array of people objects to display in the table.
+     */
     people: Array<IPerson>;
+
+    /**
+     * Called whenever the user clicks a row of the table.
+     */
     onSelect: (person: IPerson) => void;
+
+    /**
+     * Called whenever the user deletes a person.
+     */
     onDeleted: (deleted: IPerson) => void;
 }
 
 /**
- * Displays a list of people in a sortable table
+ * Displays a list of people in a sortable table.
  */
 export const PersonList = ({ people, onSelect,onDeleted }: IProps) => {
     const [sortBy, setSortBy] = useState<keyof IPerson>('lastName');
@@ -60,6 +71,7 @@ interface IPersonRowProps {
 const PersonRow = ({person, onSelect, onDeleted}:IPersonRowProps) => {
     const [deleteOp, deletePerson] = useDeleteApi(person, onDeleted);
 
+    // Display a simple UI while we're making the API call.
     if(deleteOp.deleting) {
         return(
             <RowContainer>

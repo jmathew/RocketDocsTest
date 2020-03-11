@@ -4,12 +4,32 @@ import styled from 'styled-components';
 import { addOrEditPersonAsync } from '../api/Api';
 
 interface IProps {
+    /**
+     * Called when the user adds a new person.
+     */
     onPersonAdded: (added: IPerson) => void;
+
+    /**
+     * Called when the user updates an existing person.
+     */
     onPersonUpdated: (updated: IPerson) => void;
+
+    /**
+     * Called when the user selects 'Done'.
+     */
     onDone: () => void;
+
+    /**
+     * If an initial person is provided, this UI will edit the person
+     * instead of creating a new person.
+     */
     initialPerson?: IPerson;
 }
 
+/**
+ * Displays a UI for editing or creating a new person.
+ * Defaults will be chosen when creating a new person.
+ */
 export const AddOrEditPerson = ({ initialPerson, onPersonAdded, onPersonUpdated, onDone}: IProps) => {
     const [person, setPerson] = useState(initialPerson || {
         firstName: '',
@@ -20,6 +40,7 @@ export const AddOrEditPerson = ({ initialPerson, onPersonAdded, onPersonUpdated,
         hairColor: '',
     } as IPerson);
 
+    // Generates functions that handle editing text fields.
     const onValueChange = (field: string) => (e) => {
         const updated = Object.assign({} as IPerson, person, {
             [field]: e.target.value
@@ -27,6 +48,8 @@ export const AddOrEditPerson = ({ initialPerson, onPersonAdded, onPersonUpdated,
         setPerson(updated);
     }
 
+    // Generates functions that handle editing numeric fields.
+    // NaN (achieved by hitting backspace) will be set to 0.
     const onNumericValueChange = (field: string) => (e) => {
         const newValue = e.target.value;
         let parsed;
@@ -43,9 +66,10 @@ export const AddOrEditPerson = ({ initialPerson, onPersonAdded, onPersonUpdated,
         setPerson(updated);
     }
 
-
+    // Pull in the functionality for making the add/edit api call.
     const [fetch, makeCall] = useAddOrEditPersonApi(person, setPerson, onPersonAdded, onPersonUpdated);
 
+    // Simple UI to display loading
     if(!fetch.done) {
         return (
             <Container>Making call...</Container>
@@ -83,8 +107,6 @@ export const AddOrEditPerson = ({ initialPerson, onPersonAdded, onPersonUpdated,
         </Container>
     )
 };
-
-
 
 const Container = styled.div`
     display: flex;

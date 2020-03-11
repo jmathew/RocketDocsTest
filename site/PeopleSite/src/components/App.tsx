@@ -5,11 +5,25 @@ import { AddOrEditPerson } from './AddOrEditPerson';
 import { IPerson } from '../models/Models';
 import { fetchUsersAsync } from '../api/Api';
 
+/**
+ * Describes the inital fetch operation of all the people.
+ */
 interface IInitialFetch {
+    /**
+     * Whether the fetch has started or not.
+     */
     done: boolean;
+
+    /**
+     * If the fetch fails this will be set.
+     */
     error?: Error;
 }
 
+/**
+ * Component representing the main UI of the application. It also holds
+ * the most relevant state: the list of people. 
+ */
 export const App = () => {
     const [people, setPeople ] = useState([]);
     const initialFetch = useInitialFetch(setPeople);
